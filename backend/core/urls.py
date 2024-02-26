@@ -9,6 +9,7 @@ from django.views.static import serve
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path('admin/', admin.site.urls),
     path("api/accounts/", include("accounts.urls")),
+    path("api/todos/", include("todo.urls")),
 ]
 
 urlpatterns.extend(

@@ -39,16 +39,10 @@ class UserInformation(APIView):
     """Get logged in user information"""
 
     class OutputSerializer(serializers.ModelSerializer):
-        profile_picture = serializers.ImageField(
-            source="user_profile.profile_picture",
-        )
-
         class Meta:
             model = UserAccount
             fields = (
-                "username",
                 "name",
-                "profile_picture",
             )
 
     def get(self, request: Request) -> Response:

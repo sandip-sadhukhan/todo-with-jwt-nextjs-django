@@ -20,6 +20,7 @@ ALLOWED_HOSTS = str(config("ALLOWED_HOSTS")).split(" ")
 # Application definition
 MY_APPS = [
     "accounts.apps.AccountsConfig",
+    "todo.apps.TodoConfig"
 ]
 
 THIRD_PARTY_APPS = [
