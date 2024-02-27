@@ -16,7 +16,13 @@ import { MdCheckCircle } from "react-icons/md";
 export default function Home() {
   return (
     <Container maxW="container.md" my={20} centerContent>
-      <Heading>Todos</Heading>
+      <HStack spacing={5}>
+        <Heading>Todos</Heading>
+        <Button variant="outline" colorScheme="red" size="sm">
+          Logout
+        </Button>
+      </HStack>
+
       <Divider borderWidth={2} backgroundColor="gray.900" my={2} />
 
       <VStack align="start" w="full" spacing={2} mt={3}>
