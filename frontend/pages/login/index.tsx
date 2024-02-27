@@ -11,8 +11,30 @@ import {
   useColorModeValue,
   Text,
 } from "@chakra-ui/react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 export default function Login() {
+  interface FormData {
+    email: string;
+    password: string;
+  }
+
+  const [formData, setFormData] = useState<FormData>({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = formData;
+
+  const onSubmit = (event: FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    console.log(formData);
+  };
+
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
   return (
     <Flex
       minH={"100vh"}
@@ -30,17 +52,30 @@ export default function Login() {
           boxShadow={"lg"}
           p={8}
         >
-          <Stack spacing={4}>
-            <FormControl id="email">
+          <Stack spacing={4} as="form" onSubmit={(event) => onSubmit(event)}>
+            <FormControl>
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                name="email"
+                value={email}
+                onChange={onChange}
+                required
+              />
             </FormControl>
-            <FormControl id="password">
+            <FormControl>
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input
+                type="password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                required
+              />
             </FormControl>
             <Stack spacing={2}>
               <Button
+                type="submit"
                 bg={"blue.400"}
                 color={"white"}
                 _hover={{
@@ -50,9 +85,9 @@ export default function Login() {
                 Sign in
               </Button>
               <Text>
-                Don't have an account?
+                Already have an account?
                 <Link href="/register" color="blue.800" ml={1}>
-                  Login here
+                  Register here
                 </Link>
               </Text>
             </Stack>

@@ -11,8 +11,32 @@ import {
   useColorModeValue,
   Text,
 } from "@chakra-ui/react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 export default function Register() {
+  interface FormData {
+    name: string;
+    email: string;
+    password: string;
+  }
+
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const { name, email, password } = formData;
+
+  const onSubmit = (event: FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    console.log(formData);
+  };
+
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
   return (
     <Flex
       minH={"100vh"}
@@ -22,7 +46,7 @@ export default function Register() {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
+          <Heading fontSize={"4xl"}>Register your account</Heading>
         </Stack>
         <Box
           rounded={"lg"}
@@ -30,18 +54,36 @@ export default function Register() {
           boxShadow={"lg"}
           p={8}
         >
-          <Stack spacing={4} as="form">
-            <FormControl id="email">
+          <Stack spacing={4} as="form" onSubmit={(event) => onSubmit(event)}>
+            <FormControl>
               <FormLabel>Full name</FormLabel>
-              <Input type="text" />
+              <Input
+                type="text"
+                name="name"
+                value={name}
+                onChange={onChange}
+                required
+              />
             </FormControl>
-            <FormControl id="email">
+            <FormControl>
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                name="email"
+                value={email}
+                onChange={onChange}
+                required
+              />
             </FormControl>
-            <FormControl id="password">
+            <FormControl>
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input
+                type="password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                required
+              />
             </FormControl>
             <Stack spacing={4}>
               <Button
