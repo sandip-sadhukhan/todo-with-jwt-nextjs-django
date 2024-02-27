@@ -1,7 +1,7 @@
 import { logout } from "@/auth/actions";
 import { withAuth } from "@/auth/context";
-import IsAuth from "@/auth/hocs/is-auth";
 import { IAction, IState } from "@/types/auth";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   Button,
   Container,
@@ -16,15 +16,16 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { Dispatch } from "react";
+import { Dispatch, useEffect } from "react";
 import { MdCheckCircle } from "react-icons/md";
+import authenticatedView from "@/auth/hocs/authenticatedView";
 
 interface Props {
   state: IState;
   dispatch: Dispatch<IAction>;
 }
 
-const Home = ({ dispatch }: Props) => {
+const Home = ({ state, dispatch }: Props) => {
   const toast = useToast();
 
   const logoutUser = () => {
@@ -39,55 +40,67 @@ const Home = ({ dispatch }: Props) => {
     });
   };
 
+  useEffect(() => {
+    const fetchTodos = async () => {
+      console.log(state);
+      const data = await axiosInstance.get("/api/todos/", {
+        headers: {
+          Authorization: `Bearer ${state.user?.access}`,
+        },
+      });
+      console.log(data);
+    };
+
+    fetchTodos();
+  }, []);
+
   return (
-    <IsAuth>
-      <Container maxW="container.md" my={20} centerContent>
-        <HStack spacing={5}>
-          <Heading>Todos</Heading>
-          <Button
-            variant="outline"
-            colorScheme="red"
-            size="sm"
-            onClick={logoutUser}
-          >
-            Logout
+    <Container maxW="container.md" my={20} centerContent>
+      <HStack spacing={5}>
+        <Heading>Todos</Heading>
+        <Button
+          variant="outline"
+          colorScheme="red"
+          size="sm"
+          onClick={logoutUser}
+        >
+          Logout
+        </Button>
+      </HStack>
+
+      <Divider borderWidth={2} backgroundColor="gray.900" my={2} />
+
+      <VStack align="start" w="full" spacing={2} mt={3}>
+        <HStack w="full" as="form">
+          <Input flex={1} type="text" />
+          <Button type="submit" colorScheme="blue">
+            Submit
           </Button>
         </HStack>
 
-        <Divider borderWidth={2} backgroundColor="gray.900" my={2} />
-
-        <VStack align="start" w="full" spacing={2} mt={3}>
-          <HStack w="full" as="form">
-            <Input flex={1} type="text" />
-            <Button type="submit" colorScheme="blue">
-              Submit
-            </Button>
-          </HStack>
-
-          <List spacing={3} my={5}>
-            <ListItem>
-              <Text fontSize="xl">
-                <ListIcon as={MdCheckCircle} color="green.500" />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit
-              </Text>
-            </ListItem>
-            <ListItem>
-              <Text fontSize="xl">
-                <ListIcon as={MdCheckCircle} color="green.500" />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit
-              </Text>
-            </ListItem>
-            <ListItem>
-              <Text fontSize="xl">
-                <ListIcon as={MdCheckCircle} color="green.500" />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit
-              </Text>
-            </ListItem>
-          </List>
-        </VStack>
-      </Container>
-    </IsAuth>
+        <List spacing={3} my={5}>
+          <ListItem>
+            <Text fontSize="xl">
+              <ListIcon as={MdCheckCircle} color="green.500" />
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit
+            </Text>
+          </ListItem>
+          <ListItem>
+            <Text fontSize="xl">
+              <ListIcon as={MdCheckCircle} color="green.500" />
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit
+            </Text>
+          </ListItem>
+          <ListItem>
+            <Text fontSize="xl">
+              <ListIcon as={MdCheckCircle} color="green.500" />
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit
+            </Text>
+          </ListItem>
+        </List>
+      </VStack>
+    </Container>
   );
 };
 
-export default withAuth(Home);
+export default authenticatedView(withAuth(Home));

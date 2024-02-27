@@ -10,8 +10,4 @@ const localStorageSave = (token: string, name: string) => {
   localStorage.setItem("name", name);
 };
 
-const getTokenFromLocalStorage = () => {
-  return localStorage.getItem("token");
-};
-
-export { localStorageClear, localStorageSave, getTokenFromLocalStorage };
+export { localStorageClear, localStorageSave };

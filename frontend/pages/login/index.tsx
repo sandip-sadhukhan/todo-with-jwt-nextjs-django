@@ -1,6 +1,6 @@
 import { login } from "@/auth/actions";
 import { withAuth } from "@/auth/context";
-import NotAuth from "@/auth/hocs/not-auth";
+import anonymousView from "@/auth/hocs/anonymousView";
 import { IAction, IState } from "@/types/auth";
 import { Link } from "@chakra-ui/next-js";
 import {
@@ -72,70 +72,68 @@ const Login = ({ dispatch }: Props) => {
   };
 
   return (
-    <NotAuth>
-      <Flex
-        minH={"100vh"}
-        align={"center"}
-        justify={"center"}
-        bg={useColorModeValue("gray.50", "gray.800")}
-      >
-        <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-          <Stack align={"center"}>
-            <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-          </Stack>
-          <Box
-            rounded={"lg"}
-            bg={useColorModeValue("white", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
-          >
-            <Stack spacing={4} as="form" onSubmit={(event) => onSubmit(event)}>
-              <FormControl>
-                <FormLabel>Email address</FormLabel>
-                <Input
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={onChange}
-                  required
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Password</FormLabel>
-                <Input
-                  type="password"
-                  name="password"
-                  value={password}
-                  onChange={onChange}
-                  required
-                />
-              </FormControl>
-              <Stack spacing={2}>
-                <Button
-                  type="submit"
-                  bg={"blue.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                  isLoading={loading}
-                  loadingText="Signing in..."
-                >
-                  Sign in
-                </Button>
-                <Text>
-                  Already have an account?
-                  <Link href="/register" color="blue.800" ml={1}>
-                    Register here
-                  </Link>
-                </Text>
-              </Stack>
-            </Stack>
-          </Box>
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
         </Stack>
-      </Flex>
-    </NotAuth>
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
+        >
+          <Stack spacing={4} as="form" onSubmit={(event) => onSubmit(event)}>
+            <FormControl>
+              <FormLabel>Email address</FormLabel>
+              <Input
+                type="email"
+                name="email"
+                value={email}
+                onChange={onChange}
+                required
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                required
+              />
+            </FormControl>
+            <Stack spacing={2}>
+              <Button
+                type="submit"
+                bg={"blue.400"}
+                color={"white"}
+                _hover={{
+                  bg: "blue.500",
+                }}
+                isLoading={loading}
+                loadingText="Signing in..."
+              >
+                Sign in
+              </Button>
+              <Text>
+                Already have an account?
+                <Link href="/register" color="blue.800" ml={1}>
+                  Register here
+                </Link>
+              </Text>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 };
 
-export default withAuth(Login);
+export default anonymousView(withAuth(Login));
