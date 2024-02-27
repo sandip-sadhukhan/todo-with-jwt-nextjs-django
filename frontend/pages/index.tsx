@@ -1,4 +1,7 @@
+import { logout } from "@/auth/actions";
+import { withAuth } from "@/auth/context";
 import IsAuth from "@/auth/hocs/is-auth";
+import { IAction, IState } from "@/types/auth";
 import {
   Button,
   Container,
@@ -11,16 +14,42 @@ import {
   ListItem,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
+import { Dispatch } from "react";
 import { MdCheckCircle } from "react-icons/md";
 
-export default function Home() {
+interface Props {
+  state: IState;
+  dispatch: Dispatch<IAction>;
+}
+
+const Home = ({ dispatch }: Props) => {
+  const toast = useToast();
+
+  const logoutUser = () => {
+    logout(dispatch);
+
+    toast({
+      title: "Logout Successfully!",
+      variant: "top-accent",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
   return (
     <IsAuth>
       <Container maxW="container.md" my={20} centerContent>
         <HStack spacing={5}>
           <Heading>Todos</Heading>
-          <Button variant="outline" colorScheme="red" size="sm">
+          <Button
+            variant="outline"
+            colorScheme="red"
+            size="sm"
+            onClick={logoutUser}
+          >
             Logout
           </Button>
         </HStack>
@@ -59,4 +88,6 @@ export default function Home() {
       </Container>
     </IsAuth>
   );
-}
+};
+
+export default withAuth(Home);

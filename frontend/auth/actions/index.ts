@@ -62,7 +62,6 @@ export const login = async (
 };
 
 export const signup = async (
-  username: string,
   name: string,
   email: string,
   password: string,
@@ -70,7 +69,6 @@ export const signup = async (
 ): Promise<[boolean, string]> => {
   try {
     await axiosInstance.post("/api/accounts/signup/", {
-      username,
       name,
       email,
       password,

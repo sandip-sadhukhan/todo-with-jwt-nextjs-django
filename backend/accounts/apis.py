@@ -28,9 +28,9 @@ class Signup(APIView):
 
         except IntegrityError as e:
             print(e)
-            duplicateItem = str(e.args[-1].split("'")[-2])
+            duplicateItem = str(e.args[0])
             return Response(
-                {"error": f"{duplicateItem} is already exists."},
+                {"error": f"{duplicateItem}"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

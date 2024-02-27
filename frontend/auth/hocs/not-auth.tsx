@@ -31,7 +31,7 @@ const NotAuth: React.FC<IsAuthProps> = (props: IsAuthProps) => {
     };
 
     if (loading === false && isAuthenticated === true) {
-      router.push("/dashboard");
+      router.push("/");
     } else if (loading === true) {
       login();
     }
