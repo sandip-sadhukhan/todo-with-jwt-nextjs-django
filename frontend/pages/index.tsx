@@ -16,7 +16,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { Dispatch, useEffect } from "react";
+import { Dispatch, FormEvent, useEffect, useState } from "react";
 import { MdCheckCircle } from "react-icons/md";
 import authenticatedView from "@/auth/hocs/authenticatedView";
 
@@ -27,6 +27,14 @@ interface Props {
 
 const Home = ({ state, dispatch }: Props) => {
   const toast = useToast();
+
+  interface Todo {
+    id: number;
+    text: string;
+  }
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todoForm, setTodoForm] = useState<string>("");
 
   const logoutUser = () => {
     logout(dispatch);
@@ -40,17 +48,41 @@ const Home = ({ state, dispatch }: Props) => {
     });
   };
 
-  useEffect(() => {
-    const fetchTodos = async () => {
-      console.log(state);
-      const data = await axiosInstance.get("/api/todos/", {
+  const fetchTodos = async () => {
+    const response = await axiosInstance.get("/api/todos/", {
+      headers: {
+        Authorization: `Bearer ${state.user?.access}`,
+      },
+    });
+
+    setTodos(response.data);
+  };
+
+  const createTodo = async (text: string) => {
+    const response = await axiosInstance.post(
+      "/api/todos/",
+      {
+        text,
+      },
+      {
         headers: {
           Authorization: `Bearer ${state.user?.access}`,
         },
-      });
-      console.log(data);
-    };
+      }
+    );
 
+    const data = response.data as Todo;
+
+    setTodos([...todos, data]);
+  };
+
+  const onSubmit = async (event: FormEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    await createTodo(todoForm);
+    setTodoForm("");
+  };
+
+  useEffect(() => {
     fetchTodos();
   }, []);
 
@@ -71,32 +103,27 @@ const Home = ({ state, dispatch }: Props) => {
       <Divider borderWidth={2} backgroundColor="gray.900" my={2} />
 
       <VStack align="start" w="full" spacing={2} mt={3}>
-        <HStack w="full" as="form">
-          <Input flex={1} type="text" />
+        <HStack w="full" as="form" onSubmit={onSubmit}>
+          <Input
+            flex={1}
+            type="text"
+            value={todoForm}
+            onChange={(event) => setTodoForm(event.target.value)}
+          />
           <Button type="submit" colorScheme="blue">
             Submit
           </Button>
         </HStack>
 
         <List spacing={3} my={5}>
-          <ListItem>
-            <Text fontSize="xl">
-              <ListIcon as={MdCheckCircle} color="green.500" />
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit
-            </Text>
-          </ListItem>
-          <ListItem>
-            <Text fontSize="xl">
-              <ListIcon as={MdCheckCircle} color="green.500" />
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit
-            </Text>
-          </ListItem>
-          <ListItem>
-            <Text fontSize="xl">
-              <ListIcon as={MdCheckCircle} color="green.500" />
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit
-            </Text>
-          </ListItem>
+          {todos.map((value) => (
+            <ListItem key={value.id}>
+              <Text fontSize="xl">
+                <ListIcon as={MdCheckCircle} color="green.500" />
+                {value.text}
+              </Text>
+            </ListItem>
+          ))}
         </List>
       </VStack>
     </Container>

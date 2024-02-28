@@ -31,10 +31,11 @@ class TodoList(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        services.createTodo(user=request.user, **serializer.validated_data)
+        todo = services.createTodo(user=request.user, **serializer.validated_data)
+        data = self.OutputSerializer(instance=todo).data
 
         return Response(
-            {"message": "Todo created successfully"},
+            data,
             status=status.HTTP_201_CREATED,
         )
 
