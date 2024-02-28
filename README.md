@@ -12,6 +12,8 @@ Similarly if you are already authenticated, and go to login/register router you 
 
 ## Demo of the app
 
+https://github.com/sandip-sadhukhan/todo-with-jwt-nextjs-django/assets/44361140/07fabe28-3bb4-4247-82e9-abac81c0eec8
+
 ## How to run this project locally.
 
 1. Go to /backend folder.
